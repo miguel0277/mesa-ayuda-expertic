@@ -1,7 +1,9 @@
 import { pgEnum } from "drizzle-orm/pg-core";
+// Ruta relativa a propósito: drizzle-kit carga este archivo fuera de Next.
+import { ROLES } from "../../auth/roles";
 
-export const ROLES = ["admin", "docente", "lider", "auxiliar", "profesor", "estudiante"] as const;
-export type Role = (typeof ROLES)[number];
+export { ROLES };
+export type { Role } from "../../auth/roles";
 
 export const USER_STATUSES = ["pendiente", "activo", "inactivo", "bloqueado"] as const;
 export type UserStatus = (typeof USER_STATUSES)[number];
