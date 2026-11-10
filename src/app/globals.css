@@ -1,26 +1,261 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * ─────────────────────────────────────────────────────────────
+ * Mesa de Ayuda ExperTIC — sistema de diseño "Bitácora"
+ * Única fuente de tokens. Ver docs/DISENO.md.
+ * Los colores de marca salen del logo oficial: azul #1673BB, verde #85BE53.
+ * Contraste AA (≥ 4.5:1) verificado para cada par texto/fondo.
+ * ─────────────────────────────────────────────────────────────
+ */
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-heading: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Marca */
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-ink: var(--brand-green-ink);
+
+  /* Semáforo de cumplimiento: siempre con ícono + texto, nunca solo color */
+  --color-ok: var(--ok);
+  --color-ok-fill: var(--ok-fill);
+  --color-ok-soft: var(--ok-soft);
+  --color-risk: var(--risk);
+  --color-risk-fill: var(--risk-fill);
+  --color-risk-soft: var(--risk-soft);
+  --color-late: var(--late);
+  --color-late-fill: var(--late-fill);
+  --color-late-soft: var(--late-soft);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radios con jerarquía: controles < superficies < contenedores */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 9999px;
+
+  /* Sombras: casi nada. La estructura la dan los bordes; la sombra solo eleva lo flotante. */
+  --shadow-xs: 0 1px 0 0 rgb(22 32 43 / 0.04);
+  --shadow-sm: 0 1px 2px 0 rgb(22 32 43 / 0.06);
+  --shadow-overlay: 0 12px 32px -8px rgb(22 32 43 / 0.22), 0 2px 6px -2px rgb(22 32 43 / 0.08);
+
+  /* Motion (espejo CSS de shared/ui/motion.ts) */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-quad: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 8px;
+
+  /* Marca (tal cual el logo) */
+  --brand-blue: #1673bb;
+  --brand-green: #85be53;
+  --brand-green-ink: #3b6a1c; /* verde legible para texto: 6.4:1 sobre blanco */
+
+  /* Superficies — "papel" frío, ligeramente azulado */
+  --background: #f4f6f9;
+  --foreground: #16202b; /* tinta: 16.5:1 sobre blanco */
+  --card: #ffffff;
+  --card-foreground: #16202b;
+  --popover: #ffffff;
+  --popover-foreground: #16202b;
+  --muted: #eaeff4;
+  --muted-foreground: #556373; /* 6.1:1 sobre blanco, 5.7:1 sobre fondo */
+  --border: #d9e1e9;
+  --input: #c9d3de;
+
+  /* Acciones */
+  --primary: #1673bb; /* 5.0:1 con blanco */
+  --primary-foreground: #ffffff;
+  --secondary: #e6f0f9;
+  --secondary-foreground: #0e4d7e;
+  --accent: #edf3f9;
+  --accent-foreground: #16202b;
+  --destructive: #c4321f;
+  --ring: #1673bb;
+
+  /* Semáforo (ink = texto AA; fill = barras/puntos; soft = fondo de chip) */
+  --ok: #3b7a1f;
+  --ok-fill: #85be53;
+  --ok-soft: #edf6e4;
+  --risk: #8a5300;
+  --risk-fill: #f0a92e;
+  --risk-soft: #fdf2df;
+  --late: #b42318;
+  --late-fill: #e5483b;
+  --late-soft: #fdebe9;
+
+  /* Gráficas: azul de marca primero, luego tonos distinguibles */
+  --chart-1: #1673bb;
+  --chart-2: #85be53;
+  --chart-3: #0f9fa8;
+  --chart-4: #7a5af8;
+  --chart-5: #e08a1e;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #16202b;
+  --sidebar-primary: #1673bb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6f0f9;
+  --sidebar-accent-foreground: #0e4d7e;
+  --sidebar-border: #d9e1e9;
+  --sidebar-ring: #1673bb;
+}
+
+.dark {
+  --brand-blue: #4a9ee0;
+  --brand-green: #8fcb5e;
+  --brand-green-ink: #a6d97a;
+
+  /* Noche azul profunda (no negro puro) */
+  --background: #0b131c;
+  --foreground: #e4ebf2;
+  --card: #111b26;
+  --card-foreground: #e4ebf2;
+  --popover: #142030;
+  --popover-foreground: #e4ebf2;
+  --muted: #18232f;
+  --muted-foreground: #95a5b6; /* 6.9:1 sobre card */
+  --border: #233040;
+  --input: #2c3b4d;
+
+  --primary: #4a9ee0; /* 6.5:1 sobre fondo */
+  --primary-foreground: #06121e;
+  --secondary: #13304a;
+  --secondary-foreground: #bcdaf4;
+  --accent: #172636;
+  --accent-foreground: #e4ebf2;
+  --destructive: #f2776c;
+  --ring: #4a9ee0;
+
+  --ok: #9ad16b;
+  --ok-fill: #6ea845;
+  --ok-soft: #16281a;
+  --risk: #f2b54a;
+  --risk-fill: #d9932a;
+  --risk-soft: #2e2312;
+  --late: #f58a80;
+  --late-fill: #d9483c;
+  --late-soft: #331a1a;
+
+  --chart-1: #4a9ee0;
+  --chart-2: #8fcb5e;
+  --chart-3: #36c0c7;
+  --chart-4: #a28bfa;
+  --chart-5: #f0a84a;
+
+  --sidebar: #0e1822;
+  --sidebar-foreground: #e4ebf2;
+  --sidebar-primary: #4a9ee0;
+  --sidebar-primary-foreground: #06121e;
+  --sidebar-accent: #13304a;
+  --sidebar-accent-foreground: #bcdaf4;
+  --sidebar-border: #1d2a39;
+  --sidebar-ring: #4a9ee0;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss02" 1; /* Plex: "a" y "g" de una planta, más legibles en UI */
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  /* Foco siempre visible con teclado */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading tracking-tight text-balance;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Números tabulares para tablas, KPIs y contadores */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Códigos legibles: EXP-2026-00042 */
+  .code-id {
+    @apply font-mono text-[0.8125rem] font-medium tracking-tight;
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+}
+
+/* Shimmer de skeletons: se anima transform (sin repintar), no background-position */
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
