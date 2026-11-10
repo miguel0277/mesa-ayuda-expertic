@@ -4,7 +4,7 @@ import { requireViewer } from "@/shared/auth/viewer";
 import { AppShell } from "@/shared/ui/shell/app-shell";
 import { PageSkeleton } from "@/shared/ui/states";
 
-/** Shell autenticado. La sesión real llega en la Fase 3 (hoy: visitante de desarrollo). */
+/** Shell autenticado: exige sesión activa (Better Auth) y arma el menú según el rol. */
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <Suspense fallback={<ShellFallback />}>
@@ -26,7 +26,7 @@ async function AuthedShell({ children }: { children: React.ReactNode }) {
         role: viewer.role,
         roleLabel: viewer.roleLabel,
         image: viewer.image,
-        isDevViewer: viewer.isDevViewer,
+        impersonating: viewer.impersonatedBy !== null,
       }}
     >
       {children}

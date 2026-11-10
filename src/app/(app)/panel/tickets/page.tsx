@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
+import { TicketInbox } from "@/modules/tickets/ui/ticket-inbox";
 import { requireRoute } from "@/shared/auth/viewer";
-import { SectionPlaceholder } from "@/shared/ui/section-placeholder";
 
 export const metadata: Metadata = { title: "Bandeja de tickets" };
 
-export default async function BandejaDeTicketsPage() {
-  await requireRoute("/panel/tickets");
+export default async function BandejaPage({ searchParams }: PageProps<"/panel/tickets">) {
+  const viewer = await requireRoute("/panel/tickets");
   return (
-    <SectionPlaceholder
+    <TicketInbox
+      viewer={viewer}
+      scope="all"
+      basePath="/panel/tickets"
       title="Bandeja de tickets"
-      description="Todas las solicitudes, con filtros, asignación rápida y acciones en lote."
-      phase={6}
+      description="Todas las solicitudes. Selecciona varias para asignarlas, cambiar su prioridad o cerrarlas de una vez."
+      searchParams={searchParams}
+      selectable
     />
   );
 }

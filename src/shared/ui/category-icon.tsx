@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import {
   Bug,
   CircleQuestionMark,
@@ -25,4 +26,12 @@ export type CategoryIconName = keyof typeof CATEGORY_ICONS;
 
 export function categoryIcon(name: string): LucideIcon {
   return CATEGORY_ICONS[name as CategoryIconName] ?? CircleQuestionMark;
+}
+
+/** Ícono de categoría como componente (evita crear componentes durante el render). */
+export function CategoryIcon({
+  name,
+  ...props
+}: { name: string } & React.ComponentProps<LucideIcon>) {
+  return createElement(CATEGORY_ICONS[name as CategoryIconName] ?? CircleQuestionMark, props);
 }
