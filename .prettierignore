@@ -1,0 +1,8 @@
+.next
+node_modules
+drizzle
+pnpm-lock.yaml
+public
+docs/PROMPT_MAESTRO.md
+playwright-report
+test-results
