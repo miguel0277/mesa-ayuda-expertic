@@ -1,6 +1,8 @@
 import {
+  bigint,
   boolean,
   index,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -36,6 +38,11 @@ export const user = pgTable(
 
     // ── Campos propios ExperTIC ──
     role: roleEnum("role").notNull().default("estudiante"),
+    /**
+     * Rol que la persona pidió al registrarse (D-002). Es solo informativo: el rol efectivo
+     * (`role`) lo fija el servidor y nunca lo puede cambiar el propio usuario.
+     */
+    requestedRole: roleEnum("requested_role"),
     status: userStatusEnum("status").notNull().default("pendiente"),
     codigoUis: text("codigo_uis"),
     programa: text("programa"),
@@ -122,3 +129,11 @@ export const verification = pgTable(
   },
   (t) => [index("verification_identifier_idx").on(t.identifier)],
 );
+
+/** Rate limiting de Better Auth en la BD (servidor sin estado: sirve con varias instancias). */
+export const rateLimit = pgTable("rate_limit", {
+  id: uuid("id").primaryKey().$defaultFn(newId),
+  key: text("key").notNull().unique(),
+  count: integer("count").notNull(),
+  lastRequest: bigint("last_request", { mode: "number" }).notNull(),
+});
