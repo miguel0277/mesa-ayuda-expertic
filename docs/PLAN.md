@@ -3,7 +3,7 @@
 Especificación completa: [PROMPT_MAESTRO.md](PROMPT_MAESTRO.md). Ajustes a la especificación: [DECISIONES.md](DECISIONES.md).
 Cada fase cierra con `pnpm typecheck && pnpm lint && pnpm test` en verde, un resumen y tu "continúa".
 
-## Fase 1 · Cimientos
+## Fase 1 · Cimientos ✅ (10/11/2026)
 
 1. `create-next-app` (Next 16, TS strict, App Router, `src/`, Tailwind v4, ESLint) con pnpm.
 2. Prettier, Husky + lint-staged, `.editorconfig`, workflow `.github/workflows/ci.yml` (solo archivo).
@@ -15,7 +15,7 @@ Cada fase cierra con `pnpm typecheck && pnpm lint && pnpm test` en verde, un res
 8. `/api/health` (`select 1`), logger `pino` con `requestId`, `docs/BASE_DE_DATOS.md`.
    **Cierre:** `db:migrate` y `db:seed` funcionan contra tu rama `dev` de Neon.
 
-## Fase 2 · Diseño
+## Fase 2 · Diseño ✅ (10/11/2026)
 
 Cargo `frontend-design`, `ui-ux-pro-max`, `shadcn`, `web-design-guidelines`, `vercel-react-best-practices`, `dataviz`.
 `docs/DISENO.md` (dirección visual con azul `#1673BB` / verde `#85BE53`), tokens en `globals.css`, tema claro/oscuro/sistema, `shared/ui/motion.ts`, shell (sidebar por rol, topbar, ⌘K, campana vacía, migas), estados vacío/carga/error/403. **Cierre:** tu aprobación visual (con capturas).

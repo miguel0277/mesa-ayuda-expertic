@@ -1,6 +1,6 @@
 # Dirección visual: "Bitácora"
 
-> Estado: **propuesta para aprobación** (Fase 2). Muestra viva en `pnpm dev` → http://localhost:3000/diseno (solo en desarrollo).
+> Estado: **aprobada** el 10/11/2026. Muestra viva en `pnpm dev` → http://localhost:3000/diseno (solo en desarrollo). Capturas en `docs/capturas/`.
 
 ## La idea
 
@@ -128,12 +128,14 @@ Con `prefers-reduced-motion` todo se desactiva: `MotionConfig reducedMotion="use
 ## Modo oscuro y logo
 
 - Fondo azul noche (no negro puro), con los mismos roles y contrastes.
-- El logo trae "TIC" en negro, así que **en modo oscuro se apoya sobre una placa blanca**. Si ExperTIC tiene una versión del logo para fondos oscuros, la cambiamos.
+- **Logo para fondos oscuros** (`public/brand/logo-expertic-oscuro.png`): derivado del oficial recoloreando solo "TIC" (negro → `#E4EBF2`) y "Exper" (azul → `#4A9EE0`). El ícono SEA queda intacto. Se alterna por CSS con la clase `.dark`, sin JavaScript.
+- **Isotipo** (`public/brand/isotipo-expertic.png`): el círculo SEA recortado del logo, para el sidebar colapsado y el favicon.
 
-## Lo que sigue en la Fase 2 (después de tu aprobación)
+## Shell implementado
 
-1. Shell real e interactivo: sidebar colapsable por rol, cajón en móvil, menú de usuario y migas automáticas.
-2. Paleta de comandos ⌘K (`cmdk`) con navegación según el rol.
-3. Campana de notificaciones (vacía por ahora) y tema claro/oscuro/sistema en el menú de usuario.
-4. Estados globales: carga (skeletons con la forma real), vacío, error con "Reintentar", **403 amable** y 404.
-5. Transiciones de página con Motion o View Transitions.
+- **Sidebar por rol** (`shared/ui/shell/nav.ts`): colapsable a íconos (Ctrl+B o el botón), cajón en móvil, ítem activo con barra azul y estado recordado en una cookie.
+- **Topbar:** migas de pan automáticas, búsqueda y campana.
+- **Paleta ⌘K / Ctrl+K:** secciones del rol, acciones (nueva solicitud, tema) y salto directo a un código (`exp-2026-42` → `EXP-2026-00042`).
+- **Menú de usuario:** perfil, notificaciones y tema. En desarrollo incluye "Ver como" para cambiar de rol sin iniciar sesión.
+- **Estados:** carga (esqueletos con _shimmer_ y la silueta real), vacío, error con "Reintentar" y código de referencia, 403 y 404 con ilustraciones propias.
+- **Transición de página en CSS:** se usa en lugar de Motion porque el HTML del servidor no puede salir invisible (ver D-029).

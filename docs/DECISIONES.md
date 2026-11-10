@@ -127,3 +127,19 @@ Con Cache Components (Next 16), `TZDate` crea un `new Date()` interno que rompe 
 ## D-025 · Página de muestra `/diseno` solo en desarrollo — [Propuesta]
 
 Para aprobar la dirección visual con algo real y no solo con un documento. En producción responde 404 (verificado). Sus datos son de muestra y viven dentro de esa ruta, no en la base.
+
+## D-026 · Logo para fondos oscuros derivado del oficial — [Usuario] 10/11/2026
+
+No existe versión oficial para fondos oscuros. Se generó una a partir del PNG oficial, cambiando solo el color de las letras: "TIC" de negro a `#E4EBF2` y "Exper" al azul aclarado `#4A9EE0`. El ícono SEA no se toca. Si ExperTIC entrega una versión oficial, basta con reemplazar `public/brand/logo-expertic-oscuro.png`. El isotipo (círculo SEA) se recortó del mismo logo para el sidebar colapsado y el favicon.
+
+## D-027 · Visitante de desarrollo hasta la Fase 3 — [Propuesta]
+
+Sin autenticación todavía, `getViewer()` (`shared/auth/viewer.ts`) devuelve un usuario de prueba **solo en desarrollo**, con el rol tomado de la cookie `dev_rol` ("Ver como" en el menú de usuario). En producción no hay visitante y se redirige a `/login`. La Fase 3 reemplaza esa función por la sesión de Better Auth, sin tocar las páginas.
+
+## D-028 · El código HTTP 403 se fija en el `proxy` (Fase 3) — [Propuesta]
+
+Hoy, cuando una página llama a `forbidden()`, se muestra la página amable de "sin acceso", pero el código HTTP sale 200. Con _streaming_, Next ya envió la cabecera antes de llegar a la página (comportamiento documentado). En la Fase 3 el `proxy` leerá el rol de la sesión y rechazará con 403 antes de renderizar. Las guardias de servidor en cada página y acción se mantienen como segunda barrera.
+
+## D-029 · Transición de página con CSS, no con Motion — [Propuesta]
+
+Con Motion, el HTML del servidor sale con `opacity: 0` y el contenido queda invisible hasta que hidrata el JavaScript, lo que empeora el LCP y afecta la meta de Lighthouse ≥ 90. La entrada de página usa `tw-animate-css` (fundido + 8 px, 220 ms). Motion queda para microinteracciones, el Kanban y los contadores.
