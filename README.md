@@ -23,14 +23,15 @@ pnpm dev                        # http://localhost:3000  ·  salud: /api/health
 
 Contraseña de todos: `ExperTIC-2026*`
 
-| Rol              | Correo                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------- |
-| Docente ExperTIC | `docente@expertic.test`                                                                     |
-| Auxiliar líder   | `lider1@expertic.test`, `lider2@expertic.test`                                              |
-| Auxiliar         | `aux1@expertic.test` … `aux6@expertic.test`                                                 |
-| Profesor         | `profesor1@expertic.test` … `profesor5@expertic.test` (`profesor5` pendiente de aprobación) |
-| Estudiante       | `estudiante1@expertic.test` … `estudiante10@expertic.test` (`estudiante10` pendiente)       |
-| Administrador    | el de `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`                                            |
+| Rol                   | Correo                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| Docente ExperTIC      | `docente@expertic.test`                                                               |
+| Auxiliar líder        | `lider1@expertic.test`, `lider2@expertic.test`                                        |
+| Auxiliar              | `aux1@expertic.test` … `aux6@expertic.test`                                           |
+| Profesor              | `profesor1@expertic.test` … `profesor5@expertic.test`                                 |
+| Estudiante            | `estudiante1@expertic.test` … `estudiante10@expertic.test`                            |
+| Aspirantes pendientes | `aspirante1@expertic.test` (pide auxiliar), `aspirante2@expertic.test` (pide docente) |
+| Administrador         | el de `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`                                      |
 
 ## Scripts
 

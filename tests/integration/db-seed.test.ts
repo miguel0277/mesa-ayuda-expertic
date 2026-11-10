@@ -39,6 +39,7 @@ describe("migraciones + semilla (PGlite)", () => {
     const rows = await db
       .select({ role: s.user.role, n: sql<number>`count(*)::int` })
       .from(s.user)
+      .where(eq(s.user.status, "activo"))
       .groupBy(s.user.role);
     const byRole = Object.fromEntries(rows.map((r) => [r.role, r.n]));
     expect(byRole).toEqual({
@@ -49,7 +50,16 @@ describe("migraciones + semilla (PGlite)", () => {
       profesor: 5,
       estudiante: 10,
     });
-    expect(DEMO_USERS.filter((u) => u.status === "pendiente").length).toBeGreaterThan(0);
+  });
+
+  it("solo los roles de personal quedan pendientes de aprobación (D-002)", async () => {
+    const pending = await db
+      .select({ role: s.user.role })
+      .from(s.user)
+      .where(eq(s.user.status, "pendiente"));
+    expect(pending.length).toBeGreaterThan(0);
+    expect(pending.every((u) => ["auxiliar", "lider", "docente"].includes(u.role))).toBe(true);
+    expect(DEMO_USERS.some((u) => u.role === "estudiante" && u.status === "pendiente")).toBe(false);
   });
 
   it("siembra las 6 categorías con plantillas válidas y sin edificio/salón", async () => {

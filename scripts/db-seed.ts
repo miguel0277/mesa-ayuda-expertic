@@ -22,7 +22,7 @@ const seedEnvSchema = dbEnvSchema.extend({
   SEED_ADMIN_EMAIL: z.email({ error: "Falta SEED_ADMIN_EMAIL (correo válido) en .env.local." }),
   SEED_ADMIN_PASSWORD: z
     .string({ error: "Falta SEED_ADMIN_PASSWORD en .env.local." })
-    .min(10, "SEED_ADMIN_PASSWORD debe tener al menos 10 caracteres."),
+    .min(8, "SEED_ADMIN_PASSWORD debe tener al menos 8 caracteres."),
   NODE_ENV: z.string().optional(),
 });
 

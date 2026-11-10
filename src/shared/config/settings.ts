@@ -6,9 +6,14 @@ import { z } from "zod";
  */
 export const settingsSchemas = {
   "auth.allowedEmailDomains": z.array(z.string()).default([]),
-  "registration.requireApproval": z
-    .object({ estudiante: z.boolean(), profesor: z.boolean() })
-    .default({ estudiante: true, profesor: true }),
+  /** D-002: roles que se registran solos y quedan activos tras verificar el correo. */
+  "registration.selfServiceRoles": z
+    .array(z.enum(["estudiante", "profesor"]))
+    .default(["estudiante", "profesor"]),
+  /** D-002: roles que se pueden solicitar al registrarse, pero que el admin debe aprobar. */
+  "registration.approvalRoles": z
+    .array(z.enum(["auxiliar", "lider", "docente"]))
+    .default(["auxiliar", "lider", "docente"]),
   "privacy.noticeVersion": z.string().default("2026-11-v1-provisional"),
   "attachments.maxSizeMB": z.number().int().min(1).max(50).default(10),
   "attachments.allowedMime": z

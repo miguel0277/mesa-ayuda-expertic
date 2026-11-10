@@ -105,7 +105,6 @@ export const DEMO_USERS: DemoUser[] = [
     name: "Óscar Iván Mantilla Cruz",
     role: "profesor",
     programa: "Escuela de Estudios Industriales",
-    status: "pendiente",
   },
 
   {
@@ -177,6 +176,22 @@ export const DEMO_USERS: DemoUser[] = [
     role: "estudiante",
     codigoUis: "2242210",
     programa: "Química",
+  },
+
+  // Solicitudes de rol de personal pendientes de aprobación del admin (D-002).
+  {
+    key: "aspirante1",
+    name: "Camilo Andrés Reyes Pinto",
+    role: "auxiliar",
+    codigoUis: "2241890",
+    programa: "Ingeniería de Sistemas",
+    status: "pendiente",
+  },
+  {
+    key: "aspirante2",
+    name: "Lina María Uribe Carreño",
+    role: "docente",
+    programa: "Escuela de Ingeniería de Sistemas",
     status: "pendiente",
   },
 ];

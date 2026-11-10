@@ -8,9 +8,12 @@ Cada decisión indica su origen: **[Usuario]** si la tomaste tú, **[Propuesta]*
 
 `ALLOWED_EMAIL_DOMAINS` pasa a ser **opcional**. Vacío = se acepta cualquier dominio. Si algún día se quiere restringir, basta con llenarla (ej. `uis.edu.co,correo.uis.edu.co`).
 
-## D-002 · Todo registro público queda pendiente de aprobación — [Propuesta]
+## D-002 · Aprobación solo para roles de personal — [Usuario] 10/11/2026
 
-Como ya no hay filtro por dominio y la plataforma es para personas específicas, **estudiantes y profesores** quedan en estado `pendiente` tras verificar su correo hasta que un docente o admin los apruebe. (El prompt original solo lo exigía a profesores.) Se controla con el ajuste `registration.requireApproval` en `app_settings` (por defecto `true`, ambos roles).
+- **Estudiante y profesor** se registran solos: quedan **activos** apenas verifican su correo, sin aprobación de nadie.
+- **Auxiliar, auxiliar líder y docente ExperTIC** se pueden **solicitar** al registrarse, pero la cuenta queda `pendiente` hasta que un **administrador** la apruebe. Mientras tanto no tiene acceso a la app.
+- Se configura con los ajustes `registration.selfServiceRoles` y `registration.approvalRoles` en `app_settings`.
+- Esto amplía la sección 5.2 del prompt, donde el registro público solo ofrecía estudiante y profesor. El rol Admin nunca se puede pedir al registrarse.
 
 ## D-003 · Seis categorías de ticket — [Usuario] (aprobadas 10/11/2026)
 
@@ -104,3 +107,7 @@ Next.js 16 renombró `middleware.ts` a `proxy.ts` (misma función). Se usa `src/
 ## D-020 · Semilla segura para producción — [Propuesta]
 
 `pnpm db:seed --solo-catalogo` crea solo el admin y los catálogos (categorías, SLA, ajustes), sin datos falsos, y es idempotente. Si el entorno es de producción, el script se niega a sembrar la demostración o a vaciar tablas.
+
+## D-021 · Contraseña mínima de 8 caracteres — [Usuario] 10/11/2026
+
+Igual que el mínimo por defecto de Better Auth. La contraseña provisional del admin debe cambiarse antes de salir a producción.
