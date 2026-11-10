@@ -52,6 +52,9 @@
   --color-late: var(--late);
   --color-late-fill: var(--late-fill);
   --color-late-soft: var(--late-soft);
+  /* Estado "en progreso" (violeta): texto AA sobre su fondo */
+  --color-progress: var(--progress);
+  --color-progress-soft: var(--progress-soft);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -127,6 +130,8 @@
   --late: #b42318;
   --late-fill: #e5483b;
   --late-soft: #fdebe9;
+  --progress: #5b3fc4; /* 6.0:1 sobre progress-soft */
+  --progress-soft: #efebfd;
 
   /* Gráficas: azul de marca primero, luego tonos distinguibles */
   --chart-1: #1673bb;
@@ -180,6 +185,8 @@
   --late: #f58a80;
   --late-fill: #d9483c;
   --late-soft: #331a1a;
+  --progress: #b9a7ff; /* 7.7:1 sobre progress-soft */
+  --progress-soft: #241d3d;
 
   --chart-1: #4a9ee0;
   --chart-2: #8fcb5e;
@@ -257,5 +264,37 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ── Panel de marca del login: patrón de círculos (eco del logo) que se desplaza muy lento ── */
+.auth-pattern {
+  background-image:
+    radial-gradient(circle at 18% 22%, rgb(133 190 83 / 0.28), transparent 32%),
+    radial-gradient(circle at 85% 78%, rgb(74 158 224 / 0.35), transparent 38%),
+    radial-gradient(circle, rgb(255 255 255 / 0.08) 1.2px, transparent 1.4px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    26px 26px;
+  animation: auth-drift 60s linear infinite;
+}
+@keyframes auth-drift {
+  to {
+    background-position:
+      0 0,
+      0 0,
+      26px 52px;
+  }
+}
+/* La regla de tiempo de muestra se llena al cargar (una vez). */
+.auth-rail {
+  width: 58%;
+  animation: auth-rail-fill 1.4s cubic-bezier(0.22, 1, 0.36, 1) both 0.3s;
+  transform-origin: left;
+}
+@keyframes auth-rail-fill {
+  from {
+    transform: scaleX(0);
   }
 }
