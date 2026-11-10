@@ -1,20 +1,13 @@
 "use client";
 
-import {
-  Bell,
-  ChevronsUpDown,
-  Monitor,
-  Moon,
-  Palette,
-  Sun,
-  UserRound,
-  VenetianMask,
-} from "lucide-react";
+import { Bell, ChevronsUpDown, Monitor, Moon, Palette, Sun, LogOut, UserRound } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useTransition } from "react";
-import { switchDevRole } from "@/shared/auth/dev-actions";
-import { ROLE_LABEL, ROLES, type Role } from "@/shared/auth/roles";
+import { toast } from "sonner";
+import { authClient } from "@/shared/auth/auth-client";
+import type { Role } from "@/shared/auth/roles";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/components/avatar";
 import {
   DropdownMenu,
@@ -44,7 +37,8 @@ export type ShellUser = {
   role: Role;
   roleLabel: string;
   image: string | null;
-  isDevViewer: boolean;
+  /** Un admin está "viendo como" este usuario (HU-52). */
+  impersonating: boolean;
 };
 
 export function initials(name: string): string {
@@ -56,6 +50,18 @@ export function UserMenu({ user }: { user: ShellUser }) {
   const { theme, setTheme } = useTheme();
   const { isMobile } = useSidebar();
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const signOut = () =>
+    startTransition(async () => {
+      const { error } = await authClient.signOut();
+      if (error) {
+        toast.error("No pudimos cerrar la sesión. Intenta de nuevo.");
+        return;
+      }
+      router.replace("/login");
+      router.refresh();
+    });
 
   return (
     <SidebarMenu>
@@ -127,29 +133,11 @@ export function UserMenu({ user }: { user: ShellUser }) {
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             </DropdownMenuGroup>
-            {user.isDevViewer && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger disabled={pending}>
-                    <VenetianMask aria-hidden="true" />
-                    Ver como (solo desarrollo)
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup
-                      value={user.role}
-                      onValueChange={(role) => startTransition(() => switchDevRole(role))}
-                    >
-                      {ROLES.map((r) => (
-                        <DropdownMenuRadioItem key={r} value={r}>
-                          {ROLE_LABEL[r]}
-                        </DropdownMenuRadioItem>
-                      ))}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-              </>
-            )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={signOut} disabled={pending}>
+              <LogOut aria-hidden="true" />
+              Cerrar sesión
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

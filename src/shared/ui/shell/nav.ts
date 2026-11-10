@@ -214,3 +214,17 @@ export function activeHref(pathname: string, hrefs: string[]): string | undefine
     .filter((h) => pathname === h || pathname.startsWith(`${h}/`))
     .sort((a, b) => b.length - a.length)[0];
 }
+
+/**
+ * Guardia por prefijo para el proxy: busca el ítem de menú más específico que contiene la ruta.
+ * Si la ruta no pertenece a ningún ítem (p. ej. /inicio), la decide la página.
+ */
+export function canVisitPath(role: Role, pathname: string): boolean {
+  const match = ALL_ITEMS.filter(
+    (i) => pathname === i.href || pathname.startsWith(`${i.href}/`),
+  ).sort((a, b) => b.href.length - a.href.length)[0];
+  if (!match) return true;
+  // /solicitudes/[código]: cualquiera puede abrir el detalle; la página verifica si es suyo.
+  if (match.href === "/solicitudes" && pathname !== "/solicitudes") return true;
+  return match.roles.includes(role);
+}
