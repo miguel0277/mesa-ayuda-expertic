@@ -111,3 +111,19 @@ Next.js 16 renombró `middleware.ts` a `proxy.ts` (misma función). Se usa `src/
 ## D-021 · Contraseña mínima de 8 caracteres — [Usuario] 10/11/2026
 
 Igual que el mínimo por defecto de Better Auth. La contraseña provisional del admin debe cambiarse antes de salir a producción.
+
+## D-022 · `cn` de shadcn en lugar de `clsx` + `tailwind-merge` — [Propuesta]
+
+shadcn 4 genera `cn()` desde el paquete `cn` (publicado por shadcn, repositorio `shadcn-ui/cn`): es un reemplazo compilado y más liviano de `clsx` + `tailwind-merge`, con el mismo resultado. Se reexporta desde `src/shared/lib/utils.ts`.
+
+## D-023 · Componentes de shadcn en `src/shared/ui` — [Propuesta]
+
+`components.json` apunta a `@/shared/ui/components` (primitivas de shadcn con Radix) y a `@/shared/lib/utils`, siguiendo la estructura de la sección 3 del prompt.
+
+## D-024 · Fechas con `Intl`, no con TZDate, en la interfaz — [Propuesta]
+
+Con Cache Components (Next 16), `TZDate` crea un `new Date()` interno que rompe el prerenderizado. El formateo de fechas (`shared/lib/dates.ts`) usa `Intl.DateTimeFormat` con `America/Bogota`. TZDate sigue usándose solo en el cálculo de horas hábiles, que corre en servidor y en peticiones dinámicas.
+
+## D-025 · Página de muestra `/diseno` solo en desarrollo — [Propuesta]
+
+Para aprobar la dirección visual con algo real y no solo con un documento. En producción responde 404 (verificado). Sus datos son de muestra y viven dentro de esa ruta, no en la base.
