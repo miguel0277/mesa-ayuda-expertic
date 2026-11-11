@@ -226,5 +226,8 @@ export function canVisitPath(role: Role, pathname: string): boolean {
   if (!match) return true;
   // /solicitudes/[código]: cualquiera puede abrir el detalle; la página verifica si es suyo.
   if (match.href === "/solicitudes" && pathname !== "/solicitudes") return true;
+  // /tareas/[código]: también la abren quien la asignó (docente, admin); la página verifica el acceso.
+  if (match.href === "/tareas" && pathname !== "/tareas")
+    return role !== "profesor" && role !== "estudiante";
   return match.roles.includes(role);
 }
