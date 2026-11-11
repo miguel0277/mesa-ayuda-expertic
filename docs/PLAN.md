@@ -20,29 +20,31 @@ Cada fase cierra con `pnpm typecheck && pnpm lint && pnpm test` en verde, un res
 Cargo `frontend-design`, `ui-ux-pro-max`, `shadcn`, `web-design-guidelines`, `vercel-react-best-practices`, `dataviz`.
 `docs/DISENO.md` (dirección visual con azul `#1673BB` / verde `#85BE53`), tokens en `globals.css`, tema claro/oscuro/sistema, `shared/ui/motion.ts`, shell (sidebar por rol, topbar, ⌘K, campana vacía, migas), estados vacío/carga/error/403. **Cierre:** tu aprobación visual (con capturas).
 
-## Fase 3 · Autenticación y roles
+## Fase 3 · Autenticación y roles ✅ (10/11/2026)
 
 Better Auth (email+contraseña, verificación, admin plugin, rate limit), registro por pasos con aviso Ley 1581, login, recuperación, perfil, middleware + `requestId`, `can()` con matriz completa (+ `ticket.priority`), guards, redirección por rol, aprobación de cuentas pendientes, auditoría de auth. **Cierre:** E2E de auth.
 
-## Fase 4 · Tickets
+## Fase 4 · Tickets ✅ (10/11/2026)
 
 Plantillas y `TicketFormFactory` (Zod + formulario desde el mismo JSON), crear ticket con adjuntos (`StorageProvider`), mis solicitudes, detalle (hilo, notas internas, autor y fecha visibles, línea de tiempo, SLA con contador), máquina de estados, cambio de prioridad con recálculo de SLA, calificación, notificaciones y correo. **Cierre:** E2E profesor/estudiante.
 
-## Fase 5 · Tareas y equipos (módulo separado de tickets)
+## Fase 5 · Tareas y equipos (módulo separado de tickets) ✅ (10/11/2026)
 
 Kanban (`@dnd-kit`, optimista) y lista, evidencia obligatoria, semáforo (función pura), mi progreso y racha, tickets asignados, panel del líder y delegación. **Cierre:** E2E auxiliar/líder.
 
-## Fase 6 · Docente
+## Fase 6 · Docente ✅ (10/11/2026)
 
 Panel KPIs con vistas SQL y caché, bandeja global con filtros en URL y acciones en lote, crear/asignar tareas, gestión de auxiliares/equipos/semestres y desactivación en bloque, editor visual de plantillas, SLA y festivos, exportación CSV/Excel. **Cierre:** E2E docente.
 
-## Fase 7 · Admin
+## Fase 7 · Admin ✅ (10/11/2026)
 
 Consola, usuarios (crear, bloquear, rol, restablecer), auditoría con diff, "Ver como" con banner, salud del sistema, ajustes, cron `/api/cron/sla` + `vercel.json`. **Cierre:** E2E admin.
 
-## Fase 8 · Pulido
+## Fase 8 · Pulido ✅ (10/11/2026)
 
 Accesibilidad y responsive (375 px), animaciones finas, Lighthouse ≥ 90, README con Mermaid y guía GitHub + Vercel, `docs/PERMISOS.md`. **Cierre:** checklist de terminado.
+
+**Estado al cierre:** 335 pruebas unitarias/integración y 12 E2E (Playwright: acceso por rol, flujo registro → verificación → solicitud → bandeja, sin desborde en móvil). Pendiente para la siguiente iteración: medición formal de Lighthouse en el despliegue de Vercel y E2E de edición de plantillas y aprobación de cuentas.
 
 ## Lo que necesito de ti y cuándo
 

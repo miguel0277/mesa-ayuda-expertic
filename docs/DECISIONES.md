@@ -132,14 +132,28 @@ Para aprobar la dirección visual con algo real y no solo con un documento. En p
 
 No existe versión oficial para fondos oscuros. Se generó una a partir del PNG oficial, cambiando solo el color de las letras: "TIC" de negro a `#E4EBF2` y "Exper" al azul aclarado `#4A9EE0`. El ícono SEA no se toca. Si ExperTIC entrega una versión oficial, basta con reemplazar `public/brand/logo-expertic-oscuro.png`. El isotipo (círculo SEA) se recortó del mismo logo para el sidebar colapsado y el favicon.
 
-## D-027 · Visitante de desarrollo hasta la Fase 3 — [Propuesta]
+## D-027 · Visitante de desarrollo hasta la Fase 3 — [Superada en Fase 3]
 
 Sin autenticación todavía, `getViewer()` (`shared/auth/viewer.ts`) devuelve un usuario de prueba **solo en desarrollo**, con el rol tomado de la cookie `dev_rol` ("Ver como" en el menú de usuario). En producción no hay visitante y se redirige a `/login`. La Fase 3 reemplaza esa función por la sesión de Better Auth, sin tocar las páginas.
 
-## D-028 · El código HTTP 403 se fija en el `proxy` (Fase 3) — [Propuesta]
+## D-028 · El código HTTP 403 se fija en el `proxy` (Fase 3) — [Implementada]
 
 Hoy, cuando una página llama a `forbidden()`, se muestra la página amable de "sin acceso", pero el código HTTP sale 200. Con _streaming_, Next ya envió la cabecera antes de llegar a la página (comportamiento documentado). En la Fase 3 el `proxy` leerá el rol de la sesión y rechazará con 403 antes de renderizar. Las guardias de servidor en cada página y acción se mantienen como segunda barrera.
 
-## D-029 · Transición de página con CSS, no con Motion — [Propuesta]
+## D-029 · Transición de página con CSS, no con Motion — [Implementada]
 
 Con Motion, el HTML del servidor sale con `opacity: 0` y el contenido queda invisible hasta que hidrata el JavaScript, lo que empeora el LCP y afecta la meta de Lighthouse ≥ 90. La entrada de página usa `tw-animate-css` (fundido + 8 px, 220 ms). Motion queda para microinteracciones, el Kanban y los contadores.
+
+**Cómo quedó (D-028):** el `proxy` lee el rol con `getCookieCache` (pasando `isSecure` según el protocolo de la petición, para que funcione también con `next start` en HTTP) y responde directamente un HTML 403. Un `rewrite` a la página de "sin acceso" perdía el código 403.
+
+## D-030 · Cron diario en el plan Hobby de Vercel — [Implementada]
+
+`vercel.json` programa `/api/cron/sla` a las `0 12 * * *` (7:00 a. m. en Bogotá): avisos de tareas por vencer, autocierre de solicitudes respondidas y reintento de correos pendientes. El plan Hobby solo permite una ejecución diaria; con el plan Pro se puede subir a cada hora sin cambiar código.
+
+## D-031 · Límite de intentos relajado solo para E2E — [Implementada]
+
+Las pruebas E2E entran con varios roles seguidos y chocaban con el límite de 5 inicios por minuto. `E2E_RELAXED_RATE_LIMIT=1` (lo pone `playwright.config.ts` al levantar el servidor) sube ese límite; `src/env.ts` rechaza la variable si `VERCEL_ENV=production`.
+
+## D-032 · Datos de demostración realistas — [Implementada]
+
+La semilla reparte el semáforo (mayoría a tiempo, algunas en riesgo, pocas atrasadas), resuelve ~80 % de las solicitudes dentro del SLA y fija `resolvedAt` al responder, igual que el dominio (`timestampsFor`). Así el panel muestra cifras creíbles en una demostración.
