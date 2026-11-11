@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { login, SEED_USERS } from "./helpers";
+import { login, SEED_PASSWORD, SEED_USERS } from "./helpers";
 
 /** Control de acceso por rol (RBAC) aplicado en el proxy y en las páginas. */
 test.describe("Control de acceso", () => {
@@ -15,6 +15,24 @@ test.describe("Control de acceso", () => {
     const res = await page.goto("/panel");
     expect(res?.status()).toBe(403);
     await expect(page.getByText(/no está disponible para tu rol/i)).toBeVisible();
+  });
+
+  test("si la página de regreso no es de su rol, entra a su inicio (no a un 403)", async ({
+    page,
+  }) => {
+    await page.goto("/login?volver=%2Ftareas");
+    await page.getByLabel("Correo").fill(SEED_USERS.docente);
+    await page.getByLabel("Contraseña", { exact: true }).fill(SEED_PASSWORD);
+    await page.getByRole("button", { name: "Iniciar sesión" }).click();
+    await expect(page).toHaveURL(/\/panel$/);
+  });
+
+  test("si la página de regreso sí es de su rol, vuelve a ella", async ({ page }) => {
+    await page.goto("/login?volver=%2Fpanel%2Ftickets");
+    await page.getByLabel("Correo").fill(SEED_USERS.docente);
+    await page.getByLabel("Contraseña", { exact: true }).fill(SEED_PASSWORD);
+    await page.getByRole("button", { name: "Iniciar sesión" }).click();
+    await expect(page).toHaveURL(/\/panel\/tickets$/);
   });
 
   test("un auxiliar recibe 403 en la administración", async ({ page }) => {

@@ -8,12 +8,14 @@ import { useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { authClient, authErrorMessage } from "@/shared/auth/auth-client";
+import { isRole, type Role } from "@/shared/auth/roles";
 import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/components/alert";
 import { Button } from "@/shared/ui/components/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/shared/ui/components/field";
 import { Input } from "@/shared/ui/components/input";
 import { Spinner } from "@/shared/ui/components/spinner";
 import { PasswordInput } from "@/shared/ui/password-input";
+import { canVisitPath, homeFor } from "@/shared/ui/shell/nav";
 
 const schema = z.object({
   email: z.email("Escribe un correo válido."),
@@ -21,9 +23,16 @@ const schema = z.object({
 });
 type Values = z.infer<typeof schema>;
 
-/** Solo se permite volver a rutas internas (evita redirecciones abiertas). */
-function safeReturn(raw: string | null): string {
-  return raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/inicio";
+/**
+ * A dónde ir después de entrar. Solo rutas internas (evita redirecciones abiertas) y solo si
+ * el rol puede verlas: el "volver" puede venir de la sesión de otra persona en el mismo
+ * navegador (p. ej. /tareas de un auxiliar) y no debe terminar en un 403.
+ */
+function afterLogin(raw: string | null, role: Role | null): string {
+  const home = role ? homeFor(role) : "/inicio";
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return home;
+  const pathname = raw.split(/[?#]/)[0] ?? raw;
+  return role && !canVisitPath(role, pathname) ? home : raw;
 }
 
 const NOTICES: Record<string, { title: string; body: string }> = {
@@ -54,7 +63,7 @@ export function LoginForm() {
   const onSubmit = form.handleSubmit((values) =>
     start(async () => {
       setError(null);
-      const { error: err } = await authClient.signIn.email({
+      const { data, error: err } = await authClient.signIn.email({
         email: values.email.trim(),
         password: values.password,
       });
@@ -63,7 +72,8 @@ export function LoginForm() {
         form.setFocus("password");
         return;
       }
-      router.replace(safeReturn(params.get("volver")));
+      const role = (data?.user as { role?: unknown } | undefined)?.role;
+      router.replace(afterLogin(params.get("volver"), isRole(role) ? role : null));
       router.refresh();
     }),
   );
