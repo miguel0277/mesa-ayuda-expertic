@@ -144,8 +144,8 @@ export function TicketTable({
           className={cn(
             "hidden items-center gap-4 border-b bg-muted/40 px-4 py-2 text-xs font-medium text-muted-foreground lg:grid",
             selectable
-              ? "lg:grid-cols-[1.5rem_minmax(0,1fr)_9rem_8rem_12rem]"
-              : "lg:grid-cols-[minmax(0,1fr)_9rem_8rem_12rem]",
+              ? "lg:grid-cols-[1.5rem_minmax(0,1fr)_8.5rem_10rem_12rem]"
+              : "lg:grid-cols-[minmax(0,1fr)_8.5rem_10rem_12rem]",
           )}
         >
           {selectable && (
@@ -175,15 +175,16 @@ export function TicketTable({
               },
               nowDate,
             );
-            const closed = t.status === "cerrado";
+            // Cerrada o respondida (reloj en pausa): el plazo ya no corre, mostramos el resultado.
+            const settled = ["cumplido", "incumplido", "pausado"].includes(sla.state);
             return (
               <li
                 key={t.id}
                 className={cn(
                   "group relative grid gap-x-4 gap-y-2 px-4 py-3 transition-colors hover:bg-accent/60",
                   selectable
-                    ? "grid-cols-[1.5rem_minmax(0,1fr)] lg:grid-cols-[1.5rem_minmax(0,1fr)_9rem_8rem_12rem]"
-                    : "lg:grid-cols-[minmax(0,1fr)_9rem_8rem_12rem]",
+                    ? "grid-cols-[1.5rem_minmax(0,1fr)] lg:grid-cols-[1.5rem_minmax(0,1fr)_8.5rem_10rem_12rem]"
+                    : "lg:grid-cols-[minmax(0,1fr)_8.5rem_10rem_12rem]",
                   selected.has(t.id) && "bg-secondary/50",
                 )}
               >
@@ -255,8 +256,15 @@ export function TicketTable({
                 <div
                   className={cn("flex items-center", selectable && "col-start-2 lg:col-start-auto")}
                 >
-                  {closed ? (
-                    <span className="text-xs text-muted-foreground">{sla.label}</span>
+                  {settled ? (
+                    <span
+                      className={cn(
+                        "text-xs",
+                        sla.signal === "atrasada" ? "text-late" : "text-muted-foreground",
+                      )}
+                    >
+                      {sla.label}
+                    </span>
                   ) : (
                     <TimeRail
                       start={new Date(t.createdAt)}

@@ -11,7 +11,6 @@ import { TeamsManager } from "@/modules/users/ui/teams-manager";
 import { UsersTable } from "@/modules/users/ui/users-table";
 import { requireRoute } from "@/shared/auth/viewer";
 import { getDb } from "@/shared/db/client";
-import { cn } from "@/shared/lib/utils";
 import { PageHeader } from "@/shared/ui/states";
 
 export const metadata: Metadata = { title: "Auxiliares y equipos" };
@@ -37,7 +36,7 @@ export default async function AuxiliaresPage({ searchParams }: PageProps<"/panel
         description="Arma los equipos de cada semestre, otorga roles y, al cerrar el semestre, desactiva al personal en bloque."
       />
       <div className="flex flex-col gap-4">
-        <nav aria-label="Secciones" className="flex gap-1 border-b">
+        <nav aria-label="Secciones" className="tab-strip">
           {[
             { key: "equipos", label: "Equipos del semestre", href: "/panel/auxiliares" },
             { key: "personal", label: "Personal", href: "/panel/auxiliares?ver=personal" },
@@ -46,10 +45,7 @@ export default async function AuxiliaresPage({ searchParams }: PageProps<"/panel
               key={t.key}
               href={t.href}
               aria-current={tab === t.key ? "page" : undefined}
-              className={cn(
-                "-mb-px border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground hover:text-foreground",
-                tab === t.key && "border-primary font-medium text-foreground",
-              )}
+              className="tab-item"
             >
               {t.label}
             </Link>

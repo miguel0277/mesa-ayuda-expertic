@@ -71,7 +71,7 @@ export default async function PlantillasPage({ searchParams }: PageProps<"/panel
         title="Plantillas y SLA"
         description="Define qué preguntas tiene cada categoría de solicitud y en cuánto tiempo deben atenderse."
       />
-      <nav aria-label="Secciones" className="mb-6 flex gap-1 border-b">
+      <nav aria-label="Secciones" className="mb-6 tab-strip">
         {[
           { key: "categorias", label: "Categorías", href: "/panel/plantillas" },
           { key: "sla", label: "Tiempos de atención (SLA)", href: "/panel/plantillas?ver=sla" },
@@ -80,10 +80,7 @@ export default async function PlantillasPage({ searchParams }: PageProps<"/panel
             key={t.key}
             href={t.href}
             aria-current={tab === t.key ? "page" : undefined}
-            className={cn(
-              "-mb-px border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground hover:text-foreground",
-              tab === t.key && "border-primary font-medium text-foreground",
-            )}
+            className="tab-item"
           >
             {t.label}
           </Link>

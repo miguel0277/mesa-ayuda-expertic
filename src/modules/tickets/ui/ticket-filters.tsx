@@ -73,7 +73,7 @@ export function TicketFilters({
 
   return (
     <div className="flex flex-col gap-3">
-      <div role="tablist" aria-label="Estado" className="flex gap-1 overflow-x-auto border-b">
+      <div role="tablist" aria-label="Estado" className="tab-strip">
         {TABS.map((tab) => {
           const active = same(params.estado, tab.statuses);
           return (
@@ -82,10 +82,7 @@ export function TicketFilters({
               role="tab"
               aria-selected={active}
               onClick={() => void setParams({ estado: tab.statuses, cursor: null })}
-              className={cn(
-                "-mb-px flex shrink-0 items-center gap-2 border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
-                active && "border-primary font-medium text-foreground",
-              )}
+              className="tab-item"
             >
               {tab.label}
               <span

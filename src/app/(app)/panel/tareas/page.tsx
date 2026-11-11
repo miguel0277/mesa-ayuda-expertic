@@ -7,7 +7,6 @@ import { TaskList } from "@/modules/tasks/ui/task-list";
 import { requireRoute } from "@/shared/auth/viewer";
 import { getDb } from "@/shared/db/client";
 import type { TaskStatus } from "@/shared/db/schema/enums";
-import { cn } from "@/shared/lib/utils";
 import { PageHeader } from "@/shared/ui/states";
 
 export const metadata: Metadata = { title: "Tareas del equipo" };
@@ -46,16 +45,13 @@ export default async function PanelTareasPage({ searchParams }: PageProps<"/pane
         actions={<CreateTaskDialog people={assignable.people} teams={assignable.teams} />}
       />
       <div className="flex flex-col gap-4">
-        <nav aria-label="Filtro de tareas" className="flex gap-1 overflow-x-auto border-b">
+        <nav aria-label="Filtro de tareas" className="tab-strip">
           {TABS.map((t) => (
             <Link
               key={t.key}
               href={t.key === "abiertas" ? "/panel/tareas" : `/panel/tareas?ver=${t.key}`}
               aria-current={t.key === tab.key ? "page" : undefined}
-              className={cn(
-                "-mb-px shrink-0 border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground hover:text-foreground",
-                t.key === tab.key && "border-primary font-medium text-foreground",
-              )}
+              className="tab-item"
             >
               {t.label}
             </Link>

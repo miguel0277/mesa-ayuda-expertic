@@ -34,7 +34,7 @@ export default async function NotificacionesPage({ searchParams }: PageProps<"/n
         description={unread ? `Tienes ${unread} sin leer.` : "Estás al día."}
         actions={unread > 0 ? <MarkAllButton /> : undefined}
       />
-      <nav aria-label="Filtro" className="mb-4 flex gap-1 border-b">
+      <nav aria-label="Filtro" className="mb-4 tab-strip">
         {[
           { key: false, label: "Todas", href: "/notificaciones" },
           { key: true, label: `Sin leer (${unread})`, href: "/notificaciones?ver=sin-leer" },
@@ -43,10 +43,7 @@ export default async function NotificacionesPage({ searchParams }: PageProps<"/n
             key={t.label}
             href={t.href}
             aria-current={onlyUnread === t.key ? "page" : undefined}
-            className={cn(
-              "-mb-px border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground hover:text-foreground",
-              onlyUnread === t.key && "border-primary font-medium text-foreground",
-            )}
+            className="tab-item"
           >
             {t.label}
           </Link>

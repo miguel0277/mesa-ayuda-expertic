@@ -72,7 +72,12 @@ export function slaView(
       signal: met ? "a_tiempo" : "atrasada",
       due: t.slaResolutionDue,
       target: "resolucion",
-      label: met ? "Resuelta dentro del plazo" : "Resuelta fuera del plazo",
+      label:
+        t.status === "respondido"
+          ? `Respondida ${met ? "a tiempo" : "fuera del plazo"}, esperando al solicitante`
+          : met
+            ? "Resuelta dentro del plazo"
+            : "Resuelta fuera del plazo",
     };
   }
   const target = t.firstResponseAt ? "resolucion" : "primera_respuesta";
