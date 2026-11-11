@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import { unreadCount } from "@/modules/notifications/infrastructure/notification-queries";
 import { requireViewer } from "@/shared/auth/viewer";
+import { getDb } from "@/shared/db/client";
 import { AppShell } from "@/shared/ui/shell/app-shell";
 import { PageSkeleton } from "@/shared/ui/states";
 
@@ -17,9 +19,11 @@ async function AuthedShell({ children }: { children: React.ReactNode }) {
   const viewer = await requireViewer();
   const store = await cookies();
   const sidebarOpen = store.get("sidebar_state")?.value !== "false";
+  const unread = await unreadCount(getDb(), viewer.id);
   return (
     <AppShell
       sidebarOpen={sidebarOpen}
+      unread={unread}
       user={{
         name: viewer.name,
         email: viewer.email,

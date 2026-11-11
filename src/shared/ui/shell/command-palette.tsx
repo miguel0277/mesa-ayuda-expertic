@@ -24,7 +24,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/shared/ui/components/command";
-import { ACCOUNT_NAV, navForRole } from "./nav";
+import { ACCOUNT_NAV, navForRole, normalizeCode } from "./nav";
 
 /**
  * Paleta de comandos (HU-61): Ctrl+K / ⌘K.
@@ -39,16 +39,6 @@ export function useCommandPalette() {
   const ctx = useContext(Ctx);
   if (!ctx) throw new Error("useCommandPalette debe usarse dentro de CommandPaletteProvider");
   return ctx;
-}
-
-const CODE_RE = /^(exp|tar)-?(\d{4})-?(\d{1,5})$/i;
-
-/** Normaliza "exp2026-42" → "EXP-2026-00042". */
-export function normalizeCode(input: string): string | null {
-  const m = CODE_RE.exec(input.trim().replace(/\s+/g, ""));
-  if (!m) return null;
-  const [, prefix = "", year = "", n = ""] = m;
-  return `${prefix.toUpperCase()}-${year}-${n.padStart(5, "0")}`;
 }
 
 export function CommandPaletteProvider({ role, children }: { role: Role; children: ReactNode }) {

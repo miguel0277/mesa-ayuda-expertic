@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ROLES } from "@/shared/auth/roles";
-import { normalizeCode } from "./command-palette";
-import { activeHref, canVisit, homeFor, NAV, navForRole } from "./nav";
-import { buildCrumbs } from "./topbar";
+import { activeHref, buildCrumbs, canVisit, homeFor, NAV, navForRole, normalizeCode } from "./nav";
 
 const hrefs = (role: (typeof ROLES)[number]) =>
   navForRole(role).flatMap((g) => g.items.map((i) => i.href));

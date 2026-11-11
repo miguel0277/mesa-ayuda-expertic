@@ -231,3 +231,24 @@ export function canVisitPath(role: Role, pathname: string): boolean {
     return role !== "profesor" && role !== "estudiante";
   return match.roles.includes(role);
 }
+
+/** Migas de pan desde la URL: cada segmento acumulado con su etiqueta del mapa de navegación. */
+export function buildCrumbs(pathname: string): { href: string; label: string }[] {
+  const segments = pathname.split("/").filter(Boolean);
+  return segments.map((seg, i) => {
+    const href = `/${segments.slice(0, i + 1).join("/")}`;
+    const label =
+      labelFor(href) ?? (/^(EXP|TAR)-/i.test(seg) ? seg.toUpperCase() : decodeURIComponent(seg));
+    return { href, label };
+  });
+}
+
+const CODE_RE = /^(exp|tar)-?(\d{4})-?(\d{1,5})$/i;
+
+/** Normaliza "exp2026-42" → "EXP-2026-00042" (paleta ⌘K). */
+export function normalizeCode(input: string): string | null {
+  const m = CODE_RE.exec(input.trim().replace(/\s+/g, ""));
+  if (!m) return null;
+  const [, prefix = "", year = "", n = ""] = m;
+  return `${prefix.toUpperCase()}-${year}-${n.padStart(5, "0")}`;
+}

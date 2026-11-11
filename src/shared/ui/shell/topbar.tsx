@@ -17,23 +17,10 @@ import { Kbd } from "@/shared/ui/components/kbd";
 import { Separator } from "@/shared/ui/components/separator";
 import { SidebarTrigger } from "@/shared/ui/components/sidebar";
 import { useCommandPalette } from "./command-palette";
-import { labelFor } from "./nav";
+import { buildCrumbs } from "./nav";
 import { NotificationBell } from "./notification-bell";
 
-type Crumb = { href: string; label: string };
-
-/** Migas de pan desde la URL: cada segmento acumulado con su etiqueta del mapa de navegación. */
-export function buildCrumbs(pathname: string): Crumb[] {
-  const segments = pathname.split("/").filter(Boolean);
-  return segments.map((seg, i) => {
-    const href = `/${segments.slice(0, i + 1).join("/")}`;
-    const label =
-      labelFor(href) ?? (/^(EXP|TAR)-/i.test(seg) ? seg.toUpperCase() : decodeURIComponent(seg));
-    return { href, label };
-  });
-}
-
-export function Topbar() {
+export function Topbar({ unread }: { unread: number }) {
   const pathname = usePathname();
   const { open } = useCommandPalette();
   const crumbs = buildCrumbs(pathname);
@@ -88,7 +75,7 @@ export function Topbar() {
         >
           <Search aria-hidden="true" />
         </Button>
-        <NotificationBell />
+        <NotificationBell initialUnread={unread} />
       </div>
     </header>
   );

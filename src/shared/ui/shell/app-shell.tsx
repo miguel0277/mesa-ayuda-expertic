@@ -13,10 +13,12 @@ import type { ShellUser } from "./user-menu";
 export function AppShell({
   user,
   sidebarOpen,
+  unread,
   children,
 }: {
   user: ShellUser;
   sidebarOpen: boolean;
+  unread: number;
   children: ReactNode;
 }) {
   return (
@@ -27,7 +29,7 @@ export function AppShell({
           {user.impersonating && (
             <ImpersonationBanner name={user.name} roleLabel={user.roleLabel} />
           )}
-          <Topbar />
+          <Topbar unread={unread} />
           <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8">
             {children}
           </div>
