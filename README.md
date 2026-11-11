@@ -62,7 +62,8 @@ Requisitos: Node 20+, pnpm 10, una base de datos Postgres (recomendado: una rama
 pnpm install
 cp .env.example .env.local      # completa DATABASE_URL, BETTER_AUTH_SECRET, etc.
 pnpm db:migrate                  # aplica drizzle/*.sql
-pnpm db:seed                     # catálogo + datos de demostración + admin de SEED_ADMIN_*
+pnpm db:seed --solo-catalogo     # base en blanco: catálogo + admin de SEED_ADMIN_*
+# o, para explorar con datos ficticios: pnpm db:seed --reset
 pnpm dev                         # http://localhost:3000
 ```
 
@@ -131,6 +132,26 @@ instalaciones nuevas, agrégala a `src/shared/db/seed/catalog.ts`.
 9. **Dominio:** _Settings → Domains_, agrega el dominio y crea el registro DNS que indique
    Vercel. Actualiza `BETTER_AUTH_URL` y `NEXT_PUBLIC_APP_URL` y vuelve a desplegar.
 10. Verifica `https://tu-dominio/api/health` y entra con el admin.
+
+## Puesta en marcha con datos reales
+
+La base arranca **en blanco**: solo el administrador y el catálogo (6 categorías, SLA y ajustes).
+`pnpm db:seed --solo-catalogo` la deja así; con `--reset` además borra todo lo anterior.
+
+1. **Entra como administrador** (`SEED_ADMIN_EMAIL`) y cambia la contraseña en _Perfil_.
+2. **Crea las cuentas del equipo** en _Administración → Usuarios → Crear cuenta_: los docentes
+   ExperTIC con rol _Docente ExperTIC_ y los auxiliares con rol _Auxiliar_ o _Auxiliar líder_.
+   Quedan activas de inmediato y cada persona recibe un correo para elegir su contraseña
+   (requiere el correo de producción configurado, paso 5 del despliegue).
+3. **Arma los equipos** en _Administración → Equipos_: nombre, líder y auxiliares.
+4. **Revisa las categorías y los SLA** en _Panel → Plantillas y SLA_ (como docente).
+5. **Invita a estudiantes y profesores** a registrarse en `/registro`. Su cuenta se activa al
+   confirmar el correo, sin aprobación. Si alguien se registra como auxiliar, líder o docente,
+   la cuenta queda pendiente hasta que el administrador la apruebe en _Usuarios_.
+
+Los usuarios de prueba (`*@expertic.test`) existen solo si cargas la demostración con
+`pnpm db:seed --reset` en una base de desarrollo; las pruebas E2E los necesitan. No la cargues
+en la base de producción (el script lo impide).
 
 ## Documentación
 

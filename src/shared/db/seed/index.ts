@@ -98,6 +98,7 @@ const ALL_TABLES = [
   "ticket_types",
   "app_settings",
   "verification",
+  "rate_limit",
   "account",
   "session",
   '"user"',
