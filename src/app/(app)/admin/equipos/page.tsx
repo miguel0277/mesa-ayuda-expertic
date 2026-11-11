@@ -1,16 +1,27 @@
 import type { Metadata } from "next";
+import { staffCandidates, teamsWithMembers } from "@/modules/users/infrastructure/user-queries";
+import { TeamsManager } from "@/modules/users/ui/teams-manager";
 import { requireRoute } from "@/shared/auth/viewer";
-import { SectionPlaceholder } from "@/shared/ui/section-placeholder";
+import { getDb } from "@/shared/db/client";
+import { PageHeader } from "@/shared/ui/states";
 
 export const metadata: Metadata = { title: "Equipos" };
 
-export default async function EquiposPage() {
+/** Equipos de todos los semestres, incluido el historial de los cerrados. */
+export default async function AdminEquiposPage() {
   await requireRoute("/admin/equipos");
+  const db = getDb();
+  const [teams, candidates] = await Promise.all([
+    teamsWithMembers(db, { includeClosed: true }),
+    staffCandidates(db),
+  ]);
   return (
-    <SectionPlaceholder
-      title="Equipos"
-      description="Equipos de auxiliares de todos los semestres."
-      phase={7}
-    />
+    <>
+      <PageHeader
+        title="Equipos"
+        description="Todos los equipos, activos y cerrados. Los cerrados conservan quién estuvo y hasta cuándo."
+      />
+      <TeamsManager teams={teams} candidates={candidates} />
+    </>
   );
 }

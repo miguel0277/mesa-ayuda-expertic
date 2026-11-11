@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 import { Toaster } from "@/shared/ui/components/sonner";
+import { ConfirmProvider } from "@/shared/ui/confirm";
 import { TooltipProvider } from "@/shared/ui/components/tooltip";
 
 /**
@@ -20,7 +21,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <MotionConfig reducedMotion="user">
         <NuqsAdapter>
           <TooltipProvider delayDuration={300}>
-            {children}
+            <ConfirmProvider>{children}</ConfirmProvider>
             <Toaster position="bottom-right" richColors closeButton />
           </TooltipProvider>
         </NuqsAdapter>

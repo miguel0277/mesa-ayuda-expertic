@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { DASHBOARD_TAG } from "@/modules/reports/infrastructure/dashboard";
 import { z } from "zod";
 import { validationError } from "@/shared/domain/errors";
 import { err } from "@/shared/domain/result";
@@ -18,6 +19,7 @@ import {
 } from "../application/task-commands";
 
 const refresh = (code?: string) => {
+  updateTag(DASHBOARD_TAG);
   revalidatePath("/tareas");
   revalidatePath("/equipo");
   revalidatePath("/panel/tareas");
