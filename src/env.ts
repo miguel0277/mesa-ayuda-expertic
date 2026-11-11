@@ -55,6 +55,12 @@ export const serverEnvSchema = z
       emptyToUndefined,
       z.string().min(16, "CRON_SECRET debe tener al menos 16 caracteres.").optional(),
     ),
+    /** Solo pruebas E2E: sube los límites de intentos de autenticación (muchos inicios seguidos). */
+    E2E_RELAXED_RATE_LIMIT: z
+      .enum(["0", "1"])
+      .default("0")
+      .transform((v) => v === "1"),
+    VERCEL_ENV: optionalString,
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
       .default("info"),
@@ -72,6 +78,13 @@ export const serverEnvSchema = z
         code: "custom",
         path: ["RESEND_API_KEY"],
         message: "Falta RESEND_API_KEY (requerido con EMAIL_DRIVER=resend).",
+      });
+    }
+    if (env.E2E_RELAXED_RATE_LIMIT && env.VERCEL_ENV === "production") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["E2E_RELAXED_RATE_LIMIT"],
+        message: "E2E_RELAXED_RATE_LIMIT no se permite en el despliegue de producción.",
       });
     }
     if (env.NODE_ENV === "production" && !env.CRON_SECRET) {

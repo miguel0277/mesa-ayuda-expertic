@@ -23,7 +23,7 @@ export default async function ReportesPage() {
         title="Reportes"
         description="Descarga las solicitudes y tareas de un periodo para analizarlas o archivarlas."
       />
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,32rem)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,32rem)_minmax(0,1fr)]">
         <form
           action="/api/reportes"
           method="get"

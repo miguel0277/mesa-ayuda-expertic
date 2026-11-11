@@ -156,7 +156,7 @@ function FieldEditor({
           </Button>
         </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor={`${id}-label`}>Pregunta</FieldLabel>
           <Input
@@ -401,11 +401,11 @@ export function TemplateEditor({ initial, onSaved }: { initial: TypeDraft; onSav
 
   const fieldErrors = Object.entries(errors).filter(([k]) => k.startsWith("fields"));
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
       <div className="flex min-w-0 flex-col gap-5">
         <section className="flex flex-col gap-4 rounded-xl border bg-card p-4">
           <h2 className="text-base font-semibold">Datos de la categoría</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field data-invalid={!!errors.name}>
               <FieldLabel htmlFor="tt-nombre">Nombre</FieldLabel>
               <Input
@@ -470,7 +470,7 @@ export function TemplateEditor({ initial, onSaved }: { initial: TypeDraft; onSav
               </label>
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Field>
               <FieldLabel htmlFor="tt-prio">Prioridad por defecto</FieldLabel>
               <Select

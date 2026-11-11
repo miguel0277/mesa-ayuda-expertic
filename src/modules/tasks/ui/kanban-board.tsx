@@ -74,6 +74,9 @@ function Card({ task, now, dragging }: { task: TaskCard; now: string; dragging?:
           signal={task.signal}
         />
       )}
+      {!due && (task.status === "pendiente" || task.status === "en_progreso") && (
+        <span className="text-xs text-muted-foreground">Sin fecha límite</span>
+      )}
       {task.status === "completada" && task.signal && (
         <StatusSignal
           signal={task.signal}

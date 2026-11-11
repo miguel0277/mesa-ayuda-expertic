@@ -136,8 +136,8 @@ export const auth = betterAuth({
     window: 60,
     max: 120,
     customRules: {
-      "/sign-in/email": { window: 60, max: 5 },
-      "/sign-up/email": { window: 600, max: 5 },
+      "/sign-in/email": { window: 60, max: env.E2E_RELAXED_RATE_LIMIT ? 500 : 5 },
+      "/sign-up/email": { window: 600, max: env.E2E_RELAXED_RATE_LIMIT ? 100 : 5 },
       "/request-password-reset": { window: 600, max: 3 },
       "/send-verification-email": { window: 600, max: 3 },
     },

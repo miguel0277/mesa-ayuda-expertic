@@ -442,7 +442,7 @@ function Success({ code, onAnother }: { code: string; onAnother: () => void }) {
       <div className="flex flex-col gap-1">
         <h2 className="text-xl font-semibold">Recibimos tu solicitud</h2>
         <p className="text-muted-foreground">
-          Su código es <span className="code-id text-foreground">{code}</span>. Te avisaremos por
+          Tu código es <span className="code-id text-foreground">{code}</span>. Te avisaremos por
           correo y aquí cuando haya novedades.
         </p>
       </div>
