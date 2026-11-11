@@ -13,6 +13,7 @@ import {
   sql,
   type SQL,
 } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import type { TemplateField } from "@/modules/templates/domain/template-field";
 import { can, canReadTicket, type Actor } from "@/shared/auth/permissions";
 import { ROLE_LABEL } from "@/shared/auth/roles";
@@ -162,8 +163,8 @@ export async function listTickets(
       requester: { id: requesterU.id, name: requesterU.name, role: requesterU.role },
       assigneeName: sql<
         string | null
-      >`(select u.name from ${user} u where u.id = ${tickets.assigneeId})`,
-      messages: sql<number>`(select count(*)::int from ${ticketMessages} m where m.ticket_id = ${tickets.id} and m.deleted_at is null and (m.is_internal = false or ${!!(f.scope !== "mine")}))`,
+      >`(select u.name from ${user} u where u.id = ${outer(tickets.assigneeId)})`,
+      messages: sql<number>`(select count(*)::int from ${ticketMessages} m where m.ticket_id = ${outer(tickets.id)} and m.deleted_at is null and (m.is_internal = false or ${!!(f.scope !== "mine")}))`,
     })
     .from(tickets)
     .innerJoin(ticketTypes, eq(ticketTypes.id, tickets.typeId))

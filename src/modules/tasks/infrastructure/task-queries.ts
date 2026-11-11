@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, gte, inArray, isNull, or, sql, type SQL } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import { can, canReadTask, type Actor } from "@/shared/auth/permissions";
 import { ROLE_LABEL } from "@/shared/auth/roles";
 import { getSetting } from "@/shared/config/settings-service";
@@ -44,8 +45,8 @@ export type TaskCard = {
   ticket: { code: string; title: string } | null;
 };
 
-const assignerU = sql`(select u.name from ${user} u where u.id = ${tasks.assignedBy})`;
-const assigneeName = sql`(select u.name from ${user} u where u.id = ${tasks.assigneeId})`;
+const assignerU = sql`(select u.name from ${user} u where u.id = ${outer(tasks.assignedBy)})`;
+const assigneeName = sql`(select u.name from ${user} u where u.id = ${outer(tasks.assigneeId)})`;
 
 async function cards(
   db: DbExecutor,
@@ -60,7 +61,7 @@ async function cards(
       t: tasks,
       assigneeName: sql<string | null>`${assigneeName}`,
       assignerName: sql<string>`${assignerU}`,
-      evidence: sql<number>`(select count(*)::int from ${taskEvidence} e where e.task_id = ${tasks.id})`,
+      evidence: sql<number>`(select count(*)::int from ${taskEvidence} e where e.task_id = ${outer(tasks.id)})`,
       ticketCode: tickets.code,
       ticketTitle: tickets.title,
     })
@@ -194,7 +195,7 @@ export async function taskDetail(db: DbExecutor, actor: Actor, code: string, now
   };
   if (!canReadTask(actor, resource) && card.assignedBy.id !== actor.id) return null;
 
-  const author = sql<string>`(select u.name from ${user} u where u.id = ${taskEvidence.authorId})`;
+  const author = sql<string>`(select u.name from ${user} u where u.id = ${outer(taskEvidence.authorId)})`;
   const ev = await db
     .select({ e: taskEvidence, authorName: author })
     .from(taskEvidence)
@@ -222,7 +223,7 @@ export async function taskDetail(db: DbExecutor, actor: Actor, code: string, now
     : [];
   const actorName = sql<
     string | null
-  >`(select u.name from ${user} u where u.id = ${auditLog.actorId})`;
+  >`(select u.name from ${user} u where u.id = ${outer(auditLog.actorId)})`;
   const history = await db
     .select({ a: auditLog, actorName })
     .from(auditLog)
@@ -343,7 +344,7 @@ export async function teamOverview(db: DbExecutor, teamIds: readonly string[], n
   const taskIds = all.map((t) => t.id);
   const actorName = sql<
     string | null
-  >`(select u.name from ${user} u where u.id = ${auditLog.actorId})`;
+  >`(select u.name from ${user} u where u.id = ${outer(auditLog.actorId)})`;
   const feed = taskIds.length
     ? await db
         .select({

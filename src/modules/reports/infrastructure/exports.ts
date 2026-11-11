@@ -1,4 +1,5 @@
 import { and, asc, eq, gte, isNull, lte, sql } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import { taskSignal } from "@/modules/tasks/domain/compliance";
 import { TASK_STATUS_LABEL } from "@/modules/tasks/domain/task-state";
 import { slaView } from "@/modules/tickets/domain/sla";
@@ -33,8 +34,10 @@ export async function ticketsSheet(
       requesterRole: user.role,
       assignee: sql<
         string | null
-      >`(select u.name from ${user} u where u.id = ${tickets.assigneeId})`,
-      team: sql<string | null>`(select tm.name from ${teams} tm where tm.id = ${tickets.teamId})`,
+      >`(select u.name from ${user} u where u.id = ${outer(tickets.assigneeId)})`,
+      team: sql<
+        string | null
+      >`(select tm.name from ${teams} tm where tm.id = ${outer(tickets.teamId)})`,
     })
     .from(tickets)
     .innerJoin(ticketTypes, eq(ticketTypes.id, tickets.typeId))
@@ -96,12 +99,14 @@ export async function tasksSheet(
     .select({
       t: tasks,
       assignee: user.name,
-      assigner: sql<string>`(select u.name from ${user} u where u.id = ${tasks.assignedBy})`,
-      team: sql<string | null>`(select tm.name from ${teams} tm where tm.id = ${tasks.teamId})`,
+      assigner: sql<string>`(select u.name from ${user} u where u.id = ${outer(tasks.assignedBy)})`,
+      team: sql<
+        string | null
+      >`(select tm.name from ${teams} tm where tm.id = ${outer(tasks.teamId)})`,
       ticket: sql<
         string | null
-      >`(select tk.code from ${tickets} tk where tk.id = ${tasks.ticketId})`,
-      evidence: sql<number>`(select count(*)::int from task_evidence e where e.task_id = ${tasks.id})`,
+      >`(select tk.code from ${tickets} tk where tk.id = ${outer(tasks.ticketId)})`,
+      evidence: sql<number>`(select count(*)::int from task_evidence e where e.task_id = ${outer(tasks.id)})`,
     })
     .from(tasks)
     .leftJoin(user, eq(user.id, tasks.assigneeId))

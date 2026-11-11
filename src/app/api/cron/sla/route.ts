@@ -1,4 +1,5 @@
 import { and, eq, gt, inArray, isNull, lte, sql } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import { connection, NextResponse, type NextRequest } from "next/server";
 import { remindDueTasks } from "@/modules/tasks/application/task-commands";
 import { autoCloseTickets } from "@/modules/tickets/application/ticket-commands";
@@ -43,7 +44,7 @@ export async function GET(request: NextRequest) {
         inArray(tickets.status, ["abierto", "asignado", "en_progreso", "reabierto"]),
         gt(tickets.slaResolutionDue, now),
         lte(tickets.slaResolutionDue, soon),
-        sql`not exists (select 1 from ${notifications} n where n.type = 'ticket.sla_risk' and n.href = '/solicitudes/' || ${tickets.code})`,
+        sql`not exists (select 1 from ${notifications} n where n.type = 'ticket.sla_risk' and n.href = '/solicitudes/' || ${outer(tickets.code)})`,
       ),
     )
     .limit(100);

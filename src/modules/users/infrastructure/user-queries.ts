@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, ilike, inArray, isNull, or, sql, type SQL } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import { ROLE_LABEL, type Role } from "@/shared/auth/roles";
 import { teamMembers, teams, user } from "@/shared/db/schema";
 import type { UserStatus } from "@/shared/db/schema/enums";
@@ -36,7 +37,7 @@ export async function listUsers(
       u: user,
       team: sql<
         string | null
-      >`(select t.name from ${teamMembers} m join ${teams} t on t.id = m.team_id where m.user_id = ${user.id} and m.until is null and t.active limit 1)`,
+      >`(select t.name from ${teamMembers} m join ${teams} t on t.id = m.team_id where m.user_id = ${outer(user.id)} and m.until is null and t.active limit 1)`,
     })
     .from(user)
     .where(and(...where))
@@ -84,7 +85,9 @@ export async function teamsWithMembers(db: DbExecutor, opts: { includeClosed?: b
       semester: teams.semester,
       active: teams.active,
       liderId: teams.liderId,
-      liderName: sql<string | null>`(select u.name from ${user} u where u.id = ${teams.liderId})`,
+      liderName: sql<
+        string | null
+      >`(select u.name from ${user} u where u.id = ${outer(teams.liderId)})`,
     })
     .from(teams)
     .where(and(isNull(teams.deletedAt), opts.includeClosed ? undefined : eq(teams.active, true)))

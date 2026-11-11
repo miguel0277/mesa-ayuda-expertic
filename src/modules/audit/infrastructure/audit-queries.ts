@@ -1,4 +1,5 @@
 import { and, desc, eq, gte, ilike, lte, or, sql, type SQL } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import { auditLog, tasks, tickets, user } from "@/shared/db/schema";
 import type { DbExecutor } from "@/shared/db/types";
 
@@ -51,11 +52,11 @@ export async function listAudit(db: DbExecutor, f: AuditFilters) {
       a: auditLog,
       actorName: sql<
         string | null
-      >`(select u.name from ${user} u where u.id = ${auditLog.actorId})`,
+      >`(select u.name from ${user} u where u.id = ${outer(auditLog.actorId)})`,
       label: sql<string | null>`case ${auditLog.entityType}
-        when 'ticket' then (select code from ${tickets} where id::text = ${auditLog.entityId})
-        when 'task' then (select code from ${tasks} where id::text = ${auditLog.entityId})
-        when 'user' then (select coalesce(u.name, ${auditLog.entityId}) from ${user} u where u.id::text = ${auditLog.entityId})
+        when 'ticket' then (select code from ${tickets} where id::text = ${outer(auditLog.entityId)})
+        when 'task' then (select code from ${tasks} where id::text = ${outer(auditLog.entityId)})
+        when 'user' then (select coalesce(u.name, ${outer(auditLog.entityId)}) from ${user} u where u.id::text = ${outer(auditLog.entityId)})
         else null end`,
     })
     .from(auditLog)

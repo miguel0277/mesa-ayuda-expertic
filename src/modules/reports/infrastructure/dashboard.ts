@@ -1,4 +1,5 @@
 import { and, desc, eq, gte, inArray, isNull, sql } from "drizzle-orm";
+import { outer } from "@/shared/db/sql";
 import { cacheLife, cacheTag } from "next/cache";
 import { assistantSignal, compliance, taskSignal } from "@/modules/tasks/domain/compliance";
 import { ROLE_LABEL } from "@/shared/auth/roles";
@@ -193,7 +194,7 @@ export async function getDashboard(period: Period, teamId: string | null) {
       status: tickets.status,
       priority: tickets.priority,
       createdAt: tickets.createdAt,
-      requester: sql<string>`(select u.name from ${user} u where u.id = ${tickets.requesterId})`,
+      requester: sql<string>`(select u.name from ${user} u where u.id = ${outer(tickets.requesterId)})`,
       typeName: ticketTypes.name,
       icon: ticketTypes.icon,
       color: ticketTypes.color,
