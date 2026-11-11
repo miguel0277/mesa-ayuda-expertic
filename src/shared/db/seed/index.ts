@@ -418,7 +418,7 @@ async function seedDemo(
       r.next() < 0.6 ? type.defaultPriority : r.pick(["baja", "media", "alta"] as const);
     // Abiertos: recientes; cerrados: más antiguos.
     const ageDays =
-      status === "abierto" ? r.int(0, 3) : status === "cerrado" ? r.int(8, 40) : r.int(1, 12);
+      status === "abierto" ? r.int(0, 1) : status === "cerrado" ? r.int(4, 40) : r.int(0, 3);
     const createdAt = new Date(now.getTime() - ageDays * DAY - r.int(1, 8) * HOUR);
     const pol = policyOf(priority);
     const slaFirstResponseDue = addBusinessMinutes(createdAt, pol.firstResponseMinutes, calendar);
@@ -429,7 +429,15 @@ async function seedDemo(
 
     // Línea de tiempo: pasos repartidos entre la creación y "ahora".
     const steps = pathTo[status];
-    const span = Math.max(now.getTime() - createdAt.getTime(), HOUR);
+    // Resueltos: ~80 % dentro del SLA de resolución; el resto se pasa un poco.
+    const age = now.getTime() - createdAt.getTime();
+    const slaSpan = slaResolutionDue.getTime() - createdAt.getTime();
+    const span = Math.max(
+      status === "cerrado" || status === "respondido"
+        ? Math.min(age, slaSpan * (r.next() < 0.8 ? 0.9 : 1.6))
+        : age,
+      HOUR,
+    );
     const stepTimes = steps.map(
       (_, k) => new Date(createdAt.getTime() + ((k + 1) * span) / (steps.length + 1.5)),
     );
@@ -440,7 +448,8 @@ async function seedDemo(
     const firstResponseAt =
       at("respondido") ??
       (status === "en_progreso" && r.next() < 0.5 ? at("en_progreso") : undefined);
-    const resolvedAt = at("cerrado");
+    // Igual que el dominio (timestampsFor): se resuelve al responder; reabrir lo anula.
+    const resolvedAt = status === "reabierto" ? undefined : at("respondido");
     const closedAt = status === "cerrado" ? at("cerrado") : undefined;
     const lastActivityAt = stepTimes[stepTimes.length - 1] ?? createdAt;
     const values = buildValues(type.slug, r, now);
@@ -562,11 +571,11 @@ async function seedDemo(
     n: number;
   };
   const taskPlan: TaskPlan[] = [
-    { kind: "a_tiempo", n: 18 },
-    { kind: "tarde", n: 6 },
+    { kind: "a_tiempo", n: 24 },
+    { kind: "tarde", n: 5 },
     { kind: "verde", n: 14 },
     { kind: "ambar", n: 8 },
-    { kind: "rojo", n: 9 },
+    { kind: "rojo", n: 4 },
     { kind: "cancelada", n: 3 },
     { kind: "sin_fecha", n: 2 },
   ];
@@ -598,14 +607,15 @@ async function seedDemo(
 
       switch (plan.kind) {
         case "a_tiempo":
-          dueAt = new Date(now.getTime() - r.int(1, 45) * DAY);
+          // La mayoría vence dentro del periodo actual para que el cumplimiento sea representativo.
+          dueAt = new Date(now.getTime() - r.int(1, k % 3 === 0 ? 40 : 8) * DAY);
           createdAt = new Date(dueAt.getTime() - r.int(3, 10) * DAY);
           startedAt = new Date(createdAt.getTime() + r.int(2, 24) * HOUR);
           completedAt = new Date(dueAt.getTime() - r.int(2, 48) * HOUR);
           status = "completada";
           break;
         case "tarde":
-          dueAt = new Date(now.getTime() - r.int(3, 40) * DAY);
+          dueAt = new Date(now.getTime() - r.int(3, 25) * DAY);
           createdAt = new Date(dueAt.getTime() - r.int(3, 10) * DAY);
           startedAt = new Date(createdAt.getTime() + r.int(2, 48) * HOUR);
           completedAt = new Date(dueAt.getTime() + r.int(3, 60) * HOUR);

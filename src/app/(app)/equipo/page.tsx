@@ -1,4 +1,5 @@
 import { Activity, Users } from "lucide-react";
+import { formatPercent } from "@/shared/lib/numbers";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -15,7 +16,7 @@ import { Avatar, AvatarFallback } from "@/shared/ui/components/avatar";
 import { EmptyState, PageHeader } from "@/shared/ui/states";
 import { StatusSignal } from "@/shared/ui/status-signal";
 import { TimeRail } from "@/shared/ui/time-rail";
-import { initials } from "@/shared/ui/shell/user-menu";
+import { initials } from "@/shared/lib/initials";
 
 export const metadata: Metadata = { title: "Mi equipo" };
 
@@ -87,7 +88,7 @@ export default async function EquipoPage() {
                   {[
                     {
                       label: "Cumplimiento",
-                      value: m.compliance.pct === null ? "—" : `${m.compliance.pct} %`,
+                      value: formatPercent(m.compliance.pct),
                     },
                     { label: "Abiertas", value: m.compliance.open },
                     {

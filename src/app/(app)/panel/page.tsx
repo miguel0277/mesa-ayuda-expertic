@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { formatPercent } from "@/shared/lib/numbers";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -15,7 +16,7 @@ import { cn } from "@/shared/lib/utils";
 import { AnimatedNumber } from "@/shared/ui/animated-number";
 import { Avatar, AvatarFallback } from "@/shared/ui/components/avatar";
 import { Skeleton } from "@/shared/ui/components/skeleton";
-import { initials } from "@/shared/ui/shell/user-menu";
+import { initials } from "@/shared/lib/initials";
 import { ListSkeleton, PageHeader } from "@/shared/ui/states";
 import { StatusSignal } from "@/shared/ui/status-signal";
 import { TimeRail } from "@/shared/ui/time-rail";
@@ -147,7 +148,7 @@ async function DashboardContent({ period, teamId }: { period: Period; teamId: st
                     <p className="tabular text-xs text-muted-foreground">
                       {p.team ?? p.role}
                       {p.dueElapsed
-                        ? `, ${p.onTime} de ${p.dueElapsed} a tiempo (${p.pct} %)`
+                        ? `, ${p.onTime} de ${p.dueElapsed} a tiempo (${formatPercent(p.pct)})`
                         : ", sin tareas vencidas en el periodo"}
                       {p.overdue ? `, ${p.overdue} atrasada(s)` : ""}
                     </p>
