@@ -3,14 +3,9 @@
 import { FileText, ImageIcon, Paperclip, Upload, X } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { mimeAllowed } from "@/shared/storage/file-policy";
+import { formatBytes } from "@/shared/lib/bytes";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/components/button";
-
-export function formatBytes(n: number): string {
-  if (n < 1024) return `${n} B`;
-  if (n < 1024 * 1024) return `${Math.round(n / 1024)} KB`;
-  return `${(n / 1024 / 1024).toFixed(1).replace(".", ",")} MB`;
-}
 
 function Preview({ file }: { file: File }) {
   const url = useMemo(

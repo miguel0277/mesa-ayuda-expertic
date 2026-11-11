@@ -13,7 +13,7 @@ import { Switch } from "@/shared/ui/components/switch";
 import { Textarea } from "@/shared/ui/components/textarea";
 import { FileDropzone } from "@/shared/ui/file-dropzone";
 import { RelativeTime } from "@/shared/ui/relative-time";
-import { initials } from "@/shared/ui/shell/user-menu";
+import { initials } from "@/shared/lib/initials";
 import type { TicketDetail } from "../infrastructure/ticket-queries";
 import { replyTicketAction } from "./actions";
 import { AttachmentList } from "./attachment-list";

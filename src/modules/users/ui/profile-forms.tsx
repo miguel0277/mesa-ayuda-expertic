@@ -12,7 +12,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/shared/ui/com
 import { Input } from "@/shared/ui/components/input";
 import { Spinner } from "@/shared/ui/components/spinner";
 import { PasswordInput, PasswordMeter } from "@/shared/ui/password-input";
-import { initials } from "@/shared/ui/shell/user-menu";
+import { initials } from "@/shared/lib/initials";
 import { updateProfileAction, uploadAvatarAction } from "./actions";
 
 type Profile = {

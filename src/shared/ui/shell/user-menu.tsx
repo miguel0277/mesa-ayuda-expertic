@@ -8,6 +8,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { authClient } from "@/shared/auth/auth-client";
 import type { Role } from "@/shared/auth/roles";
+import { initials } from "@/shared/lib/initials";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/components/avatar";
 import {
   DropdownMenu,
@@ -40,11 +41,6 @@ export type ShellUser = {
   /** Un admin está "viendo como" este usuario (HU-52). */
   impersonating: boolean;
 };
-
-export function initials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase();
-}
 
 export function UserMenu({ user }: { user: ShellUser }) {
   const { theme, setTheme } = useTheme();

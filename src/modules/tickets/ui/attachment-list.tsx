@@ -1,5 +1,5 @@
 import { Download, FileText, ImageIcon, Paperclip } from "lucide-react";
-import { formatBytes } from "@/shared/ui/file-dropzone";
+import { formatBytes } from "@/shared/lib/bytes";
 import type { AttachmentDTO } from "../infrastructure/ticket-queries";
 
 /** Adjuntos descargables a través de la ruta autorizada /api/archivos/[id]. */
