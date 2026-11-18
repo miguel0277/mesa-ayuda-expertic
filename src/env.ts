@@ -48,8 +48,9 @@ export const serverEnvSchema = z
     SEED_ADMIN_PASSWORD: optionalString,
     STORAGE_DRIVER: z.enum(["local", "vercel-blob"]).default("local"),
     BLOB_READ_WRITE_TOKEN: optionalString,
-    EMAIL_DRIVER: z.enum(["console", "resend"]).default("console"),
+    EMAIL_DRIVER: z.enum(["console", "resend", "brevo"]).default("console"),
     RESEND_API_KEY: optionalString,
+    BREVO_API_KEY: optionalString,
     EMAIL_FROM: z.string().default("Mesa de Ayuda ExperTIC <no-responder@localhost>"),
     CRON_SECRET: z.preprocess(
       emptyToUndefined,
@@ -78,6 +79,13 @@ export const serverEnvSchema = z
         code: "custom",
         path: ["RESEND_API_KEY"],
         message: "Falta RESEND_API_KEY (requerido con EMAIL_DRIVER=resend).",
+      });
+    }
+    if (env.EMAIL_DRIVER === "brevo" && !env.BREVO_API_KEY) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["BREVO_API_KEY"],
+        message: "Falta BREVO_API_KEY (requerido con EMAIL_DRIVER=brevo).",
       });
     }
     if (env.E2E_RELAXED_RATE_LIMIT && env.VERCEL_ENV === "production") {

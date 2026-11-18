@@ -119,8 +119,13 @@ instalaciones nuevas, agrégala a `src/shared/db/seed/catalog.ts`.
    (y una rama por cada Preview si lo activas).
 4. **Archivos:** _Storage → Blob → Create_ (privado). Agrega `STORAGE_DRIVER=vercel-blob`; el
    token `BLOB_READ_WRITE_TOKEN` lo pone la integración.
-5. **Correo:** crea una cuenta en Resend, verifica tu dominio y agrega `EMAIL_DRIVER=resend`,
-   `RESEND_API_KEY` y `EMAIL_FROM="Mesa de Ayuda ExperTIC <soporte@tu-dominio>"`.
+5. **Correo** (sin él no llegan los correos de verificación y nadie puede entrar). Dos opciones:
+   - **Brevo (gratis, sin dominio propio):** en Brevo verifica el remitente en _Remitentes_, crea
+     una clave en _SMTP y API → Claves API_ y agrega `EMAIL_DRIVER=brevo`, `BREVO_API_KEY` y
+     `EMAIL_FROM="Mesa de Ayuda ExperTIC <remitente-verificado@gmail.com>"`. Con remitente
+     `@gmail.com` algunos correos pueden llegar a spam.
+   - **Resend (dominio propio):** verifica tu dominio y agrega `EMAIL_DRIVER=resend`,
+     `RESEND_API_KEY` y `EMAIL_FROM="Mesa de Ayuda ExperTIC <soporte@tu-dominio>"`.
 6. **Resto de variables** (Production y Preview): `BETTER_AUTH_SECRET` (`openssl rand -base64 32`),
    `BETTER_AUTH_URL` y `NEXT_PUBLIC_APP_URL` con la URL pública, `CRON_SECRET` (16+ caracteres),
    `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD` y, si quieres restringir, `ALLOWED_EMAIL_DOMAINS`.

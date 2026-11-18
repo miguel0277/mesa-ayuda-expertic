@@ -37,6 +37,14 @@ describe("env", () => {
     );
   });
 
+  it("exige la clave de Brevo cuando EMAIL_DRIVER=brevo", () => {
+    expect(() => parseEnv(serverEnvSchema, { ...valid, EMAIL_DRIVER: "brevo" })).toThrow(
+      /BREVO_API_KEY/,
+    );
+    const env = parseEnv(serverEnvSchema, { ...valid, EMAIL_DRIVER: "brevo", BREVO_API_KEY: "k" });
+    expect(env.BREVO_API_KEY).toBe("k");
+  });
+
   it("exige CRON_SECRET en producción", () => {
     expect(() => parseEnv(serverEnvSchema, { ...valid, NODE_ENV: "production" })).toThrow(
       /CRON_SECRET/,

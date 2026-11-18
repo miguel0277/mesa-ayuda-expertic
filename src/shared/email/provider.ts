@@ -77,6 +77,55 @@ export class ResendEmail implements EmailProvider {
   }
 }
 
+/** Separa `"Nombre <correo@dominio>"` en nombre y correo (también acepta solo el correo). */
+export function parseFromAddress(from: string): { name?: string; email: string } {
+  const match = /^\s*"?([^"<]*?)"?\s*<\s*([^<>\s]+)\s*>\s*$/.exec(from);
+  if (match) {
+    const name = match[1]?.trim();
+    return name ? { name, email: match[2]! } : { email: match[2]! };
+  }
+  return { email: from.trim() };
+}
+
+/**
+ * Producción sin dominio propio: API HTTP de Brevo (plan gratuito, 300 correos/día).
+ * El remitente de EMAIL_FROM debe estar verificado en Brevo → Remitentes.
+ */
+export class BrevoEmail implements EmailProvider {
+  readonly name = "brevo";
+  private readonly sender: { name?: string; email: string };
+
+  constructor(
+    private readonly apiKey: string,
+    from: string,
+    private readonly fetchFn: typeof fetch = fetch,
+  ) {
+    this.sender = parseFromAddress(from);
+  }
+
+  async send(message: EmailMessage): Promise<void> {
+    const res = await this.fetchFn("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": this.apiKey,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        sender: this.sender,
+        to: [{ email: message.to }],
+        subject: message.subject,
+        htmlContent: message.html,
+        textContent: message.text,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`Brevo respondió ${res.status}: ${body.slice(0, 200)}`);
+    }
+  }
+}
+
 /** Proveedor de pruebas: guarda los correos en memoria. */
 export class MemoryEmail implements EmailProvider {
   readonly name = "memory";
